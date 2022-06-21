@@ -1,46 +1,63 @@
 import { useEffect, useState } from 'react';
 import './bootstrap.css';
 import './crud.scss';
-import Create from './Components/crud/Create';
-import List from './Components/crud/List';
-import Edit from './Components/crud/Edit';
+import Create from './Components/Create';
+import List from './Components/List';
+import Edit from './Components/Edit';
+import ScooterContext from './Components/ScooterContext';
 import axios from 'axios';
-import TreeContext from './Components/TreeContext';
-
-
-
+import Message from './Components/Message';
 
 function App() {
 
   const [lastUpdate, setLastUpdate] = useState(Date.now());
 
-  const [trees, setTrees] = useState(null);
+  const [scooters, setScooters] = useState(null);
   const [modalData, setModalData] = useState(null);
+
+
   const [createData, setCreateData] = useState(null);
   const [deleteData, setDeleteData] = useState(null);
   const [editData, setEditData] = useState(null);
 
+  const [message, setMessage] = useState(null);
+
+  const [disableCreate, setDisableCreate] = useState(false);
+
+
   //Read
   useEffect(() => {
-    axios.get('http://localhost:3003/medziai')
-      .then(res => setTrees(res.data));
+    axios.get('http://localhost:3003/paspirtukai')
+      .then(res => {
+        setScooters(res.data)
+        console.log(res.data);
+      });
   }, [lastUpdate]);
 
   // Create
   useEffect(() => {
     if (null === createData) return;
-    axios.post('http://localhost:3003/medziai', createData)
-      .then(_ => {
+    axios.post('http://localhost:3003/paspirtukai', createData)
+      .then(res => {
+        showMessage(res.data.msg);
         setLastUpdate(Date.now());
-      });
+      })
+      .catch(error => {
+        showMessage({ text: error.message, type: 'danger' });
+      })
+      .then(() => {
+        setDisableCreate(false);
+      })
+
 
   }, [createData]);
 
   // Delete
   useEffect(() => {
     if (null === deleteData) return;
-    axios.delete('http://localhost:3003/medziai/' + deleteData.id)
-      .then(_ => {
+    axios.delete('http://localhost:3003/paspirtukai/' + deleteData.id)
+      .then(res => {
+        showMessage(res.data.msg);
         setLastUpdate(Date.now());
       });
   }, [deleteData]);
@@ -48,34 +65,47 @@ function App() {
   // Edit
   useEffect(() => {
     if (null === editData) return;
-    axios.put('http://localhost:3003/medziai/' + editData.id, editData)
-      .then(_ => {
+    axios.put('http://localhost:3003/paspirtukai/' + editData.id, editData)
+      .then(res => {
+        showMessage(res.data.msg);
         setLastUpdate(Date.now());
       });
   }, [editData]);
 
+
+  const showMessage = msg => {
+    setMessage(msg);
+    setTimeout(() => setMessage(null), 5000);
+  }
+
+
   return (
-    <TreeContext.Provider value={
+    <ScooterContext.Provider value={
       {
-        trees,
+        scooters,
         setCreateData,
-        setDeleteData
+        setDeleteData,
+        setModalData,
+        modalData,
+        setEditData,
+        message,
+        disableCreate,
+        setDisableCreate
       }
     }>
       <div className="container">
         <div className="row">
           <div className="col-4">
-
             <Create />
           </div>
           <div className="col-8">
-            <List trees={trees} setModalData={setModalData}></List>
+            <List></List>
           </div>
         </div>
       </div>
-      <Edit setEditData={setEditData} modalData={modalData} setModalData={setModalData}></Edit>
-      {/* //gal reikia istrinti setEditData */}
-    </TreeContext.Provider>
+      <Edit />
+      <Message />
+    </ScooterContext.Provider>
   );
 
 

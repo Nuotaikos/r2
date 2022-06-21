@@ -1,26 +1,29 @@
 import { useContext } from "react";
-import TreeContext from "../TreeContext";
+import ScooterContext from "./ScooterContext";
 
 
-function Tree({ tree }) {
 
-  const { setDeleteData } = useContext(TreeContext);
+
+function Scooter({ scooter }) {
+
+  const { setDeleteData, setModalData } = useContext(ScooterContext);
 
   const handleDelete = () => {
-    setDeleteData(tree);
+    setDeleteData(scooter);
   }
 
   const handleEdit = () => {
-    // setModalData(ex);
+    setModalData(scooter);
   }
 
   return (
     <li className="list-group-item">
       <div className="item">
         <div className="content">
-          <b>{tree.title}</b>
-          <span>{['Leaf', 'Spike', 'Palm'][tree.type - 1]}</span>
-          <i>{tree.height}</i>
+          <b>{scooter.registrationCode}</b>
+          <span> {scooter.lastUseTime} </span>
+          <b > {scooter.totalRideKilometres} </b>
+          <span>{['Free', 'Busy'][scooter.isBusy - 1]}</span>
         </div>
         <div className="buttons">
           <button type="button" className="btn btn-outline-success ml-2" onClick={handleEdit}>Edit</button>
@@ -31,4 +34,4 @@ function Tree({ tree }) {
   );
 }
 
-export default Tree;
+export default Scooter;
