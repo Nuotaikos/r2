@@ -43,7 +43,7 @@ function Create() {
           <input type="number" step="0.01" className="form-control" value={totalRideKilometres} onChange={e => SetTotalRideKilometres(e.target.value)} />
           <small className="form-text text-muted">Enter totalRideKilometres</small>
         </div>
-        <button type="button" className="btn btn-outline-primary with-loader" onClick={handleCreate} disabled={disableCreate}>
+        <button type="button" className="btn btn-outline-info with-loader" onClick={handleCreate} disabled={disableCreate}>
           <span className="spinner-border spinner-border-sm mr-2"></span>
           <span className="spinner-text">Create</span>
         </button>

@@ -7,6 +7,7 @@ import Edit from './Components/Edit';
 import ScooterContext from './Components/ScooterContext';
 import axios from 'axios';
 import Message from './Components/Message';
+import Statistic from './Components/Statistic';
 
 function App() {
 
@@ -23,7 +24,29 @@ function App() {
   const [message, setMessage] = useState(null);
 
   const [disableCreate, setDisableCreate] = useState(false);
+  const [kolt, setKolt] = useState([]);
 
+  //count Kolt
+
+  useEffect(() => {
+    axios.get('http://localhost:3003/paspirtukai')
+      .then(res => {
+        setKolt(res.data)
+        console.log(res.data);
+      });
+  }, [lastUpdate]);
+
+
+  // useEffect(() => {
+
+  //   let data = localStorage.getItem('kolt')
+  //   if (null === data) {
+  //     localStorage.setItem('kolt', JSON.stringify([]));
+  //     setKolt([]);
+  //   } else {
+  //     setKolt(JSON.parse(data));
+  //   }
+  // }, []);
 
   //Read
   useEffect(() => {
@@ -97,6 +120,7 @@ function App() {
         <div className="row">
           <div className="col-4">
             <Create />
+            <Statistic kolt={kolt}></Statistic>
           </div>
           <div className="col-8">
             <List></List>

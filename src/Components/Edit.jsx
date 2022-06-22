@@ -10,7 +10,7 @@ function Edit() {
 
   const [registrationCode, setRegistrationCode] = useState(rand(10000000, 99999999));
   const [lastUseTime, setLastUseTime] = useState('');
-  const [totalRideKilometres, setDistance] = useState(0);
+  const [totalRideKilometres, setTalRideKilometres] = useState(0);
   const [busy, setBusy] = useState(1); //1 laisvas 0 uzimtas
   const [newDate, setNewDate] = useState('');
   const [newDistance, setNewDistance] = useState(0);
@@ -21,14 +21,14 @@ function Edit() {
     }
     setRegistrationCode(modalData.registrationCode);
     setLastUseTime(modalData.lastUseTime);
-    setDistance(modalData.totalRideKilometres);
-    setBusy(modalData.busy);
+    setTalRideKilometres(modalData.totalRideKilometres);
+    setBusy(modalData.isBusy);
     setNewDate(modalData.newDate);
     setNewDistance(0);
   }, [modalData]);
 
   const handleEdit = () => {
-    const data = { registrationCode, lastUseTime, newDate, newDistance, totalRideKilometres: Number(totalRideKilometres) + Number(newDistance), id: modalData.id };
+    const data = { registrationCode, busy, lastUseTime, newDate, newDistance, totalRideKilometres: Number(totalRideKilometres) + Number(newDistance), id: modalData.id };
     setEditData(data);
     setModalData(null);
   }
@@ -55,7 +55,7 @@ function Edit() {
               </div >
               <div class="form-group">
                 <label for="formGroupExampleInput">Last use date</label>
-                <input type="date" value={lastUseTime} className="form-control" disabled />
+                <input type="date" value={modalData.lastUseTime.slice(0, 10)} className="form-control" disabled />
               </div>
               <div class="form-group">
                 <label for="formGroupExampleInput2">New date</label>
@@ -73,11 +73,11 @@ function Edit() {
                 <label className="form-check-label" for="defaultCheck1">
                   Is Busy:
                 </label>
-                <input className="Busy" value={busy} checked={!busy} onChange={e => setBusy(e.target.value)} type="checkbox" name="Busy" />
+                <input className="Busy" value={busy} checked={busy} onChange={e => setBusy(!busy)} type="checkbox" name="Busy" />
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-outline-secondary" onClick={() => setModalData(null)}>Close</button>
-                <button type="button" className="btn btn-outline-primary" onClick={handleEdit}>Save changes</button>
+                <button type="button" className="btn btn-outline-info" onClick={handleEdit}>Save changes</button>
               </div>
             </div>
           </div>
